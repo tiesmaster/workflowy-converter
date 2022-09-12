@@ -1,26 +1,26 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Xml.Serialization;
+using System.Xml;
 
 using TextCopy;
 
-var workflowyBackupFilename = Util.ReadLine<string>("What is the location of the Workflowy backup file?");
-var targetId = Util.ReadLine<Guid?> ("What is the ID of the node you want to convert to OPML (leave empty for the root node)?");
+var workflowyBackupFilename = args[0];
+var targetId = args.Length > 1 ? Guid.Parse(args[1]) : Guid.Empty;
 
 var inputFile = File.OpenRead(workflowyBackupFilename);
 
 var rootNode = JsonSerializer.Deserialize<WorkflowyNode>(inputFile);
 
-if (targetId.HasValue)
+if (targetId != Guid.Empty)
 {
-    rootNode = rootNode.GetNodeBydId(targetId.Value);
+    rootNode = rootNode.GetNodeBydId(targetId);
 }
 
 var ms = new MemoryStream();
-var xmlSerializer = new XmlSerializer(typeof(WorkflowyNode));
 var writer = new StreamWriter(ms);
 
-var xmlWriter = XmlWriter.Create(writer, new XmlWriterSettings
+using var xmlWriter = XmlWriter.Create(writer, new XmlWriterSettings
 {
     Indent = true,
 });
@@ -32,7 +32,6 @@ root.WriteTo(xmlWriter);
 xmlWriter.Flush();
 
 var s = Encoding.UTF8.GetString(ms.ToArray());
-s.Dump();
 
 ClipboardService.SetText(s);
 
@@ -57,7 +56,7 @@ public class WorkflowyNode
 {
     [JsonPropertyName("id")]
     public Guid Id { get; set; }
-    
+
     [JsonPropertyName("nm")]
     public string Todo { get; set; }
 
@@ -73,7 +72,7 @@ public class WorkflowyNode
         {
             return this;
         }
-        
+
         if (Children is not null)
         {
             foreach (var child in Children)
@@ -85,7 +84,7 @@ public class WorkflowyNode
                 }
             }
         }
-        
+
         return default;
     }
 
@@ -97,7 +96,7 @@ public class WorkflowyNode
             writer.WriteAttributeString("_complete", "true");
         }
         writer.WriteAttributeString("text", Todo);
-        
+
         if (Children is not null)
         {
             foreach (var child in Children)
@@ -105,7 +104,7 @@ public class WorkflowyNode
                 child.WriteTo(writer);
             }
         }
-        
+
         writer.WriteEndElement();
     }
 }
