@@ -8,7 +8,7 @@ using TextCopy;
 var workflowyBackupFilename = args[0];
 var targetId = args.Length > 1 ? Guid.Parse(args[1]) : Guid.Empty;
 
-var inputFile = File.OpenRead(workflowyBackupFilename);
+using var inputFile = File.OpenRead(workflowyBackupFilename);
 
 var rootNode = JsonSerializer.Deserialize<WorkflowyNode>(inputFile);
 
