@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Xml;
 
@@ -17,7 +18,13 @@ public class WorkflowyNode
     [JsonPropertyName("cp")]
     public int? Completed { get; init; }
 
-    public WorkflowyNode? GetNodeBydId(Guid targetId)
+    public static WorkflowyNode ReadFrom(Stream stream)
+        => JsonSerializer.Deserialize<WorkflowyNode>(stream)!;
+
+    public WorkflowyNode GetNodeBydId(Guid targetId)
+        => GetNodeBydIdCore(targetId)!;
+
+    private WorkflowyNode? GetNodeBydIdCore(Guid targetId)
     {
         if (Id == targetId)
         {
@@ -38,6 +45,9 @@ public class WorkflowyNode
 
         return default;
     }
+
+    public OpmlDocument ToOpmlDocument()
+        => new(this);
 
     public void WriteTo(XmlWriter writer)
     {
