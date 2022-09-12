@@ -24,28 +24,6 @@ public class WorkflowyNode
     public WorkflowyNode GetNodeBydId(Guid targetId)
         => GetNodeBydIdCore(targetId)!;
 
-    private WorkflowyNode? GetNodeBydIdCore(Guid targetId)
-    {
-        if (Id == targetId)
-        {
-            return this;
-        }
-
-        if (Children is not null)
-        {
-            foreach (var child in Children)
-            {
-                var targetNode = child.GetNodeBydId(targetId);
-                if (targetNode is not null)
-                {
-                    return targetNode;
-                }
-            }
-        }
-
-        return default;
-    }
-
     public OpmlDocument ToOpmlDocument()
         => new(this);
 
@@ -68,5 +46,27 @@ public class WorkflowyNode
         }
 
         writer.WriteEndElement();
+    }
+
+    private WorkflowyNode? GetNodeBydIdCore(Guid targetId)
+    {
+        if (Id == targetId)
+        {
+            return this;
+        }
+
+        if (Children is not null)
+        {
+            foreach (var child in Children)
+            {
+                var targetNode = child.GetNodeBydId(targetId);
+                if (targetNode is not null)
+                {
+                    return targetNode;
+                }
+            }
+        }
+
+        return default;
     }
 }
