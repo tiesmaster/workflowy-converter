@@ -5,6 +5,29 @@ namespace Tiesmaster.Workflowy.Converter;
 
 public record OpmlDocument(WorkflowyNode Node)
 {
+    public override string ToString()
+    {
+        using var ms = new MemoryStream();
+        WriteTo(ms);
+
+        return Encoding.UTF8.GetString(ms.ToArray());
+    }
+
+    public void WriteTo(Stream stream)
+    {
+        using var writer = new StreamWriter(stream);
+        WriteTo(writer);
+    }
+
+    public void WriteTo(TextWriter textWriter)
+    {
+        using var xmlWriter = XmlWriter.Create(
+            textWriter,
+            new XmlWriterSettings { Indent = true });
+
+        WriteTo(xmlWriter);
+    }
+
     public void WriteTo(XmlWriter writer)
     {
         writer.WriteStartElement("opml");
@@ -17,27 +40,5 @@ public record OpmlDocument(WorkflowyNode Node)
         writer.WriteEndElement();
 
         writer.WriteEndElement();
-    }
-
-    public override string ToString()
-    {
-        var ms = new MemoryStream();
-
-        var writer = new StreamWriter(ms);
-
-        using var xmlWriter = XmlWriter.Create(
-            writer,
-            new XmlWriterSettings
-            {
-                Indent = true
-            });
-
-        WriteTo(xmlWriter);
-
-        xmlWriter.Flush();
-
-        var s = Encoding.UTF8.GetString(ms.ToArray());
-
-        return s;
     }
 }
