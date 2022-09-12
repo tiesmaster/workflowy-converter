@@ -43,6 +43,10 @@ dotnet_diagnostic.CA1062.severity = none
 # Justification: We're not in 2001 anymore.
 dotnet_diagnostic.CA1014.severity = none
 
+# CA2007: Consider calling ConfigureAwait on the awaited task
+# Justification: Don't use CA(false) in applications, only in NuGet class libraries.
+dotnet_diagnostic.CA2007.severity = none
+
 # Roslyn Analyzers (analyzers for Roslyn API itself)
 
 # RS2008: Enable analyzer release tracking
@@ -90,6 +94,12 @@ dotnet_diagnostic.SA1633.severity = none
 # Justification: These days, the advise is to only "elide" async/await on overload chains. This rule
 # doesn't take that into account, and therefore does more harm.
 dotnet_diagnostic.AsyncFixer01.severity = none
+
+# Meziantou.Analyzer diagnostics
+
+# MA0004: Use Task.ConfigureAwait(false)
+# Justification: See CA2007
+dotnet_diagnostic.MA0004.severity = none
 
 # Roslynator diagnostics
 

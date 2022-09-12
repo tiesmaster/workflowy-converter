@@ -1,13 +1,37 @@
+using System.CommandLine;
+
 using TextCopy;
 
 namespace Tiesmaster.Workflowy.Converter;
 
 internal static class Program
 {
-    private static void Main(string[] args)
+    private static async Task<int> Main(string[] args)
     {
-        var workflowyBackupFilename = args[0];
-        var targetId = args.Length > 1 ? Guid.Parse(args[1]) : Guid.Empty;
+        var inputOption = new Option<FileInfo?>(
+            name: "--input",
+            description: "The path to the Workflowy .backup file");
+
+        var idOption = new Option<Guid?>(
+            name: "--id",
+            description: "The ID of the node to convert");
+
+        var rootCommand = new RootCommand("Workflowy .backup JSON to OPML converter");
+        rootCommand.AddOption(inputOption);
+        rootCommand.AddOption(idOption);
+
+        rootCommand.SetHandler(
+            (file, id) => ConvertJsonToOpml(file!, id),
+            inputOption,
+            idOption);
+
+        return await rootCommand.InvokeAsync(args);
+    }
+
+    private static void ConvertJsonToOpml(FileInfo file, Guid? id)
+    {
+        var workflowyBackupFilename = file.FullName;
+        var targetId = id ?? Guid.Empty;
 
         using var inputStream = File.OpenRead(workflowyBackupFilename);
         var rootNode = WorkflowyNode.ReadFrom(inputStream);

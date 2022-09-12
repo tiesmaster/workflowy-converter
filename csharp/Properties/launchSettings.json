@@ -2,7 +2,7 @@
   "profiles": {
     "WorkflowyConverter": {
       "commandName": "Project",
-      "commandLineArgs": "c:\\ties\\backup\\WorkFlowy\\test-file.json 0390366b-3205-1969-5d16-18f768d09dc3"
+      "commandLineArgs": "--input c:\\ties\\backup\\WorkFlowy\\test-file.json --id 0390366b-3205-1969-5d16-18f768d09dc3"
     }
   }
 }
