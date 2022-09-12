@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using System.Xml;
 
 namespace Tiesmaster.Workflowy.Converter;
@@ -6,16 +6,16 @@ namespace Tiesmaster.Workflowy.Converter;
 public class WorkflowyNode
 {
     [JsonPropertyName("id")]
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
 
     [JsonPropertyName("nm")]
-    public string Todo { get; set; }
+    public string Todo { get; init; } = null!;
 
     [JsonPropertyName("ch")]
-    public List<WorkflowyNode> Children { get; set; }
+    public IEnumerable<WorkflowyNode>? Children { get; init; }
 
     [JsonPropertyName("cp")]
-    public int? Completed { get; set; }
+    public int? Completed { get; init; }
 
     public WorkflowyNode? GetNodeBydId(Guid targetId)
     {
@@ -46,6 +46,7 @@ public class WorkflowyNode
         {
             writer.WriteAttributeString("_complete", "true");
         }
+
         writer.WriteAttributeString("text", Todo);
 
         if (Children is not null)
