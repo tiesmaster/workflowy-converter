@@ -80,15 +80,15 @@ public class WorkflowyNode
         {
             foreach (var child in Children)
             {
-				var targetNode = child.GetNodeBydId(targetId);
-				if (targetNode is not null)
-				{
-					return targetNode;
-				}
+                var targetNode = child.GetNodeBydId(targetId);
+                if (targetNode is not null)
+                {
+                    return targetNode;
+                }
             }
         }
-		
-		return default;
+        
+        return default;
     }
 
     public void WriteTo(XmlWriter writer)
