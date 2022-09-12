@@ -1,110 +1,45 @@
 ﻿using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Xml;
 
 using TextCopy;
 
-var workflowyBackupFilename = args[0];
-var targetId = args.Length > 1 ? Guid.Parse(args[1]) : Guid.Empty;
+namespace Tiesmaster.Workflowy.Converter;
 
-using var inputFile = File.OpenRead(workflowyBackupFilename);
-
-var rootNode = JsonSerializer.Deserialize<WorkflowyNode>(inputFile);
-
-if (targetId != Guid.Empty)
+internal class Program
 {
-    rootNode = rootNode.GetNodeBydId(targetId);
-}
-
-var ms = new MemoryStream();
-var writer = new StreamWriter(ms);
-
-using var xmlWriter = XmlWriter.Create(writer, new XmlWriterSettings
-{
-    Indent = true,
-});
-
-var root = new RootNode(rootNode);
-
-root.WriteTo(xmlWriter);
-
-xmlWriter.Flush();
-
-var s = Encoding.UTF8.GetString(ms.ToArray());
-
-ClipboardService.SetText(s);
-
-public record RootNode(WorkflowyNode Node)
-{
-    public void WriteTo(XmlWriter writer)
+    private static void Main(string[] args)
     {
-        writer.WriteStartElement("opml");
-        writer.WriteAttributeString("version", "2.0");
+        var workflowyBackupFilename = args[0];
+        var targetId = args.Length > 1 ? Guid.Parse(args[1]) : Guid.Empty;
 
-        writer.WriteStartElement("body");
+        using var inputFile = File.OpenRead(workflowyBackupFilename);
 
-        Node.WriteTo(writer);
+        var rootNode = JsonSerializer.Deserialize<WorkflowyNode>(inputFile)!;
 
-        writer.WriteEndElement();
-
-        writer.WriteEndElement();
-    }
-}
-
-public class WorkflowyNode
-{
-    [JsonPropertyName("id")]
-    public Guid Id { get; set; }
-
-    [JsonPropertyName("nm")]
-    public string Todo { get; set; }
-
-    [JsonPropertyName("ch")]
-    public List<WorkflowyNode> Children { get; set; }
-
-    [JsonPropertyName("cp")]
-    public int? Completed { get; set; }
-
-    public WorkflowyNode GetNodeBydId(Guid targetId)
-    {
-        if (Id == targetId)
+        if (targetId != Guid.Empty)
         {
-            return this;
+            rootNode = rootNode.GetNodeBydId(targetId);
         }
 
-        if (Children is not null)
+        var ms = new MemoryStream();
+        var writer = new StreamWriter(ms);
+
+        using var xmlWriter = XmlWriter.Create(writer, new XmlWriterSettings
         {
-            foreach (var child in Children)
-            {
-                var targetNode = child.GetNodeBydId(targetId);
-                if (targetNode is not null)
-                {
-                    return targetNode;
-                }
-            }
-        }
+            Indent = true,
+        });
 
-        return default;
-    }
+        var root = new RootNode(rootNode);
 
-    public void WriteTo(XmlWriter writer)
-    {
-        writer.WriteStartElement("outline");
-        if (Completed.HasValue)
-        {
-            writer.WriteAttributeString("_complete", "true");
-        }
-        writer.WriteAttributeString("text", Todo);
+        root.WriteTo(xmlWriter);
 
-        if (Children is not null)
-        {
-            foreach (var child in Children)
-            {
-                child.WriteTo(writer);
-            }
-        }
+        xmlWriter.Flush();
 
-        writer.WriteEndElement();
+        var s = Encoding.UTF8.GetString(ms.ToArray());
+
+        ClipboardService.SetText(s);
+
+        Console.WriteLine(s);
     }
 }

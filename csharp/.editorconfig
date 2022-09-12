@@ -1,0 +1,174 @@
+# Code files
+[*.{cs,csx,vb,vbx}]
+indent_style = space
+indent_size = 4
+
+# .NET formatting settings:
+[*.{cs,vb}]
+# Organize usings
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = true
+
+# CSharp code style settings:
+[*.cs]
+csharp_style_var_for_built_in_types = true:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_var_elsewhere = true:suggestion
+csharp_style_namespace_declarations = file_scoped:warning
+
+# From issue #22884 on Roslyn repo: https://github.com/dotnet/roslyn/issues/22884#issuecomment-358776444
+dotnet_naming_rule.private_members_with_underscore.symbols  = private_fields
+dotnet_naming_rule.private_members_with_underscore.style    = prefix_underscore
+dotnet_naming_rule.private_members_with_underscore.severity = suggestion
+
+dotnet_naming_symbols.private_fields.applicable_kinds           = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+
+dotnet_naming_style.prefix_underscore.capitalization = camel_case
+dotnet_naming_style.prefix_underscore.required_prefix = _
+
+# CSharp compiler diagnostics
+
+# CS1591: Missing XML comment for publicly visible type or member
+# Justification: Not everything needs to have XML comments
+dotnet_diagnostic.CS1591.severity = none
+
+# .NET SDK diagnostics (roslyn-analyzers)
+
+# CA1062: Validate arguments of public methods
+# Justification: Use C# 8 nullable reference types instead.
+dotnet_diagnostic.CA1062.severity = none
+
+# CA1014: Mark assemblies with CLSCompliant
+# Justification: We're not in 2001 anymore.
+dotnet_diagnostic.CA1014.severity = none
+
+# Roslyn Analyzers (analyzers for Roslyn API itself)
+
+# RS2008: Enable analyzer release tracking
+# Justification: This project is too small to do release tracking
+dotnet_diagnostic.RS2008.severity = none
+
+# StyleCop diagnostics
+
+# SA1101: Prefix local calls with this
+# Justification: Superfluous, so let's not do this.
+dotnet_diagnostic.SA1101.severity = none
+
+# SA1200: Using directives should be placed correctly
+# Justification: Defacto standard these days is to put them on top.
+dotnet_diagnostic.SA1200.severity = none
+
+# SA1204: Static elements should appear before instance elements
+# Justification: Private static methods can be helpers in the given class, and following the rule of
+# "be able to read like a book", static methods shouldn't be placed higher then when they're referenced.
+dotnet_diagnostic.SA1204.severity = none
+
+# SA1309: Field names should not begin with underscore
+# Justification: The naming convention of this project is to start a field with an underscore.
+dotnet_diagnostic.SA1309.severity = none
+
+# SA1512: Single-line comments should not be followed by blank line
+# Justification: Blank line after "multiple" single-line comments is more neat.
+dotnet_diagnostic.SA1512.severity = none
+
+# SA1600: Elements should be documented
+# Justification: Not every single public member requires documentation.
+dotnet_diagnostic.SA1600.severity = none
+
+# SA1601: Partial elements should be documented
+# Justification: See SA1600
+dotnet_diagnostic.SA1601.severity = none
+
+# SA1633: File should have header
+# Justification: Not needed for this project.
+dotnet_diagnostic.SA1633.severity = none
+
+# AsyncFixer diagnostics
+
+# AsyncFixer01: Unnecessary async/await usage
+# Justification: These days, the advise is to only "elide" async/await on overload chains. This rule
+# doesn't take that into account, and therefore does more harm.
+dotnet_diagnostic.AsyncFixer01.severity = none
+
+# Roslynator diagnostics
+
+# RCS1246: Use element access.
+# Justification: The perf gain is minimal, and readability decreases with this rule.
+dotnet_diagnostic.RCS1246.severity = none
+
+# RCS9006: Use element access.
+# Justification: See RCS1246.
+dotnet_diagnostic.RCS9006.severity = none
+
+# Roslynator Formatting diagnostics
+dotnet_diagnostic.RCS0001.severity = suggestion
+dotnet_diagnostic.RCS0002.severity = suggestion
+dotnet_diagnostic.RCS0003.severity = suggestion
+dotnet_diagnostic.RCS0004.severity = suggestion
+dotnet_diagnostic.RCS0005.severity = suggestion
+dotnet_diagnostic.RCS0006.severity = suggestion
+dotnet_diagnostic.RCS0007.severity = suggestion
+dotnet_diagnostic.RCS0008.severity = suggestion
+dotnet_diagnostic.RCS0009.severity = suggestion
+dotnet_diagnostic.RCS0010.severity = suggestion
+dotnet_diagnostic.RCS0011.severity = suggestion
+dotnet_diagnostic.RCS0012.severity = none
+dotnet_diagnostic.RCS0013.severity = suggestion
+dotnet_diagnostic.RCS0014.severity = suggestion
+dotnet_diagnostic.RCS0015.severity = suggestion
+dotnet_diagnostic.RCS0016.severity = suggestion
+dotnet_diagnostic.RCS0020.severity = suggestion
+dotnet_diagnostic.RCS0021.severity = suggestion
+dotnet_diagnostic.RCS0022.severity = suggestion
+dotnet_diagnostic.RCS0023.severity = suggestion
+dotnet_diagnostic.RCS0024.severity = suggestion
+dotnet_diagnostic.RCS0025.severity = suggestion
+dotnet_diagnostic.RCS0027.severity = suggestion
+dotnet_diagnostic.RCS0028.severity = suggestion
+dotnet_diagnostic.RCS0029.severity = suggestion
+dotnet_diagnostic.RCS0030.severity = suggestion
+dotnet_diagnostic.RCS0031.severity = suggestion
+dotnet_diagnostic.RCS0032.severity = suggestion
+dotnet_diagnostic.RCS0033.severity = suggestion
+dotnet_diagnostic.RCS0034.severity = suggestion
+dotnet_diagnostic.RCS0036.severity = suggestion
+dotnet_diagnostic.RCS0038.severity = suggestion
+dotnet_diagnostic.RCS0039.severity = suggestion
+dotnet_diagnostic.RCS0041.severity = suggestion
+dotnet_diagnostic.RCS0042.severity = suggestion
+dotnet_diagnostic.RCS0043.severity = suggestion
+dotnet_diagnostic.RCS0044.severity = none
+dotnet_diagnostic.RCS0045.severity = none
+dotnet_diagnostic.RCS0046.severity = none
+dotnet_diagnostic.RCS0047.severity = none
+dotnet_diagnostic.RCS0048.severity = suggestion
+dotnet_diagnostic.RCS0049.severity = suggestion
+dotnet_diagnostic.RCS0050.severity = suggestion
+dotnet_diagnostic.RCS0051.severity = suggestion
+dotnet_diagnostic.RCS0052.severity = suggestion
+dotnet_diagnostic.RCS0053.severity = suggestion
+dotnet_diagnostic.RCS0054.severity = suggestion
+dotnet_diagnostic.RCS0055.severity = suggestion
+dotnet_diagnostic.RCS0056.severity = suggestion
+
+# Meziantou Analyzers diagnostics
+# MA0006: Use String.Equals instead of equality operator
+# Justification: Using string.Equals doesn't improve readability
+dotnet_diagnostic.MA0006.severity = none
+
+# Xml project files
+[*.{csproj,vcxproj,vcxproj.filters,proj,nativeproj,locproj}]
+indent_size = 2
+
+# Xml build files
+[*.builds]
+indent_size = 2
+
+# Xml files
+[*.{xml,stylecop,resx,ruleset}]
+indent_size = 2
+
+# Xml config files
+[*.{props,targets,config,nuspec}]
+indent_size = 2
