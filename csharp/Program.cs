@@ -8,8 +8,8 @@ internal static class Program
 {
     private static async Task<int> Main(string[] args)
     {
-        var inputOption = new Option<FileInfo?>(
-            name: "--input",
+        var inputArgument = new Argument<FileInfo?>(
+            name: "input",
             description: "The path to the Workflowy .backup file");
 
         var idOption = new Option<Guid?>(
@@ -17,12 +17,12 @@ internal static class Program
             description: "The ID of the node to convert");
 
         var rootCommand = new RootCommand("Workflowy .backup JSON to OPML converter");
-        rootCommand.AddOption(inputOption);
+        rootCommand.AddArgument(inputArgument);
         rootCommand.AddOption(idOption);
 
         rootCommand.SetHandler(
             (file, id) => ConvertJsonToOpml(file!, id),
-            inputOption,
+            inputArgument,
             idOption);
 
         return await rootCommand.InvokeAsync(args);
