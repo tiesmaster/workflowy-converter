@@ -21,7 +21,7 @@ internal static class Program
         rootCommand.AddOption(idOption);
 
         rootCommand.SetHandler(
-            (file, id) => ConvertJsonToOpml(file!, id),
+            (inputFile, id) => ConvertJsonToOpml(inputFile!, id),
             inputArgument,
             idOption);
 
