@@ -1,8 +1,15 @@
 name: Push
 on: push
 jobs:
-  hello-world:
+  build-wasm:
     runs-on: ubuntu-latest
     steps:
-      - name: Hello World
-        run: echo "Hoi"
+      - name: Checkout source
+        uses: actions/checkout@v2
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: |
+            6.0.x
+      - name: Publish WASM project
+        run: dotnet publish --configuration Release --ouput publish csharp/WorkflowyConverter.Wasm/WorkflowyConverter.Wasm.csproj
