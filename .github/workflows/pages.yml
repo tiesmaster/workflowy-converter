@@ -38,6 +38,8 @@ jobs:
         run: dotnet publish --configuration Release --output _site csharp/WorkflowyConverter.Wasm/WorkflowyConverter.Wasm.csproj
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
+        with:
+          path: _site/wwwroot
 
   # Deployment job
   deploy:
