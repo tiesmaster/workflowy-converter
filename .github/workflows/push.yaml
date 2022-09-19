@@ -12,4 +12,8 @@ jobs:
           dotnet-version: |
             6.0.x
       - name: Publish WASM project
-        run: dotnet publish --configuration Release --ouput publish csharp/WorkflowyConverter.Wasm/WorkflowyConverter.Wasm.csproj
+        run: dotnet publish --configuration Release --output www csharp/WorkflowyConverter.Wasm/WorkflowyConverter.Wasm.csproj
+      - name: Upload WASM artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: www
