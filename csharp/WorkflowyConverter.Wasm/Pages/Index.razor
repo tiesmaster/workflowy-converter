@@ -2,3 +2,29 @@
 
 <PageTitle>Workflowy Converter</PageTitle>
 
+@if (File is null)
+{
+    <InputFile id="fileInput" OnChange="UploadFiles" hidden />
+
+    <MudButton HtmlTag="label"
+           Variant="Variant.Filled"
+           Color="Color.Primary"
+           StartIcon="@Icons.Filled.CloudUpload"
+           for="fileInput">
+        Upload Files
+    </MudButton>
+}
+else
+{
+    <p>@File.Name, @File.ContentType</p>
+}
+
+@code
+{
+    public IBrowserFile? File { get; set; }
+
+    private void UploadFiles(InputFileChangeEventArgs e)
+    {
+        File = e.File;
+    }
+}
