@@ -2,9 +2,9 @@
 
 <PageTitle>Workflowy Converter</PageTitle>
 
-@if (File is null)
+@if (_text is null)
 {
-    <InputFile id="fileInput" OnChange="UploadFiles" hidden />
+    <InputFile id="fileInput" OnChange="UploadFilesAsync" hidden />
 
     <MudButton HtmlTag="label"
            Variant="Variant.Filled"
@@ -16,15 +16,18 @@
 }
 else
 {
-    <p>@File.Name, @File.ContentType</p>
+    <p>@_text</p>
 }
 
 @code
 {
-    public IBrowserFile? File { get; set; }
+    private string? _text;
 
-    private void UploadFiles(InputFileChangeEventArgs e)
+    private async Task UploadFilesAsync(InputFileChangeEventArgs e)
     {
-        File = e.File;
+        var stream = e.File.OpenReadStream();
+
+        var reader = new StreamReader(stream);
+        _text = await reader.ReadToEndAsync();
     }
 }
