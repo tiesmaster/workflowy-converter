@@ -1,4 +1,6 @@
 @page "/"
+@inject IJsApiService JsApiService
+@inject ISnackbar Snackbar
 
 <PageTitle>Workflowy Converter</PageTitle>
 
@@ -33,7 +35,7 @@ else
         </MudItem>
         <MudItem xs="6">
             <MudPaper Class="pa-8">
-                <p>@Opml</p>
+                <pre>@Opml</pre>
             </MudPaper>
         </MudItem>
     </MudGrid>
@@ -41,9 +43,6 @@ else
 
 @code
 {
-    [Inject]
-    public IJsApiService JsApiService { get; set; } = default!;
-
     private const string DefaultDragClass = "relative rounded-lg border-2 border-dashed pa-4 mt-4 mud-width-full mud-height-full";
     private string _dragClass = DefaultDragClass;
 
@@ -52,9 +51,17 @@ else
 
     private async Task UploadFilesAsync(InputFileChangeEventArgs e)
     {
-        var stream = e.File.OpenReadStream(maxAllowedSize: 2_000_000);
-        var rootNodes = await WorkflowyNode.ReadFromAsync(stream);
-        _rootNodes = rootNodes.ToHashSet();
+        try
+        {
+            var stream = e.File.OpenReadStream(maxAllowedSize: 2_000_000);
+            var rootNodes = await WorkflowyNode.ReadFromAsync(stream);
+            _rootNodes = rootNodes.ToHashSet();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"{e.File.Name} is not a valid Workflowy JSON backup file", Severity.Warning);
+            Console.WriteLine(ex.ToString());
+        }
     }
 
     private async Task CopyOpmlToClipboard()
