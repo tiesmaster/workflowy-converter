@@ -11,6 +11,10 @@
 }
 else
 {
+    <MudToolBar DisableGutters="true" Class="gap-4">
+        <MudButton OnClick="Clear" Color="Color.Error" Variant="Variant.Filled" StartIcon="@Icons.Filled.Delete">Clear</MudButton>
+    </MudToolBar>
+
     <MudGrid Spacing="10" Justify="Justify.Center">
         <MudItem xs="6">
             <MudPaper Class="pa-8">
@@ -47,6 +51,13 @@ else
         var stream = e.File.OpenReadStream(maxAllowedSize: 2_000_000);
         var rootNodes = await WorkflowyNode.ReadFromAsync(stream);
         _rootNodes = rootNodes.ToHashSet();
+    }
+
+    private void Clear()
+    {
+        _rootNodes = null;
+        _selectedNode = null;
+        ClearDragClass();
     }
 
     public string? Opml => _selectedNode?.ToOpmlDocument().ToString();
