@@ -12,7 +12,8 @@
 else
 {
     <MudToolBar DisableGutters="true" Class="gap-4">
-        <MudButton OnClick="Clear" Color="Color.Error" Variant="Variant.Filled" StartIcon="@Icons.Filled.Delete">Clear</MudButton>
+        <MudButton OnClick="CopyOpmlToClipboard" StartIcon="@Icons.Material.Outlined.FileCopy" Variant="Variant.Filled" Disabled="@(Opml is null)">Copy OPML to clipboard</MudButton>
+        <MudButton OnClick="Clear" StartIcon="@Icons.Filled.Delete" Variant="Variant.Filled" Color="Color.Error">Clear</MudButton>
     </MudToolBar>
 
     <MudGrid Spacing="10" Justify="Justify.Center">
@@ -40,6 +41,9 @@ else
 
 @code
 {
+    [Inject]
+    public IJsApiService JsApiService { get; set; } = default!;
+
     private const string DefaultDragClass = "relative rounded-lg border-2 border-dashed pa-4 mt-4 mud-width-full mud-height-full";
     private string _dragClass = DefaultDragClass;
 
@@ -53,10 +57,16 @@ else
         _rootNodes = rootNodes.ToHashSet();
     }
 
+    private async Task CopyOpmlToClipboard()
+    {
+        await JsApiService.CopyToClipboardAsync(Opml!);
+    }
+
     private void Clear()
     {
         _rootNodes = null;
         _selectedNode = null;
+
         ClearDragClass();
     }
 
