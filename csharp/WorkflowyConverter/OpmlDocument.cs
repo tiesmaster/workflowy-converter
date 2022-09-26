@@ -1,10 +1,36 @@
 using System.Text;
+using System.Text.Json;
 using System.Xml;
 
 namespace Tiesmaster.Workflowy.Converter;
 
-public record OpmlDocument(WorkflowyNode Node)
+public record OpmlDocument(HashSet<WorkflowyNode> RootNodes)
 {
+    public OpmlDocument(params WorkflowyNode[] rootNodes)
+        : this(rootNodes.ToHashSet())
+    {
+    }
+
+    public static async Task<OpmlDocument> ReadFromAsync(Stream stream)
+    {
+        var rootNodes = await JsonSerializer.DeserializeAsync<WorkflowyNode[]>(stream);
+        return new(rootNodes!);
+    }
+
+    public OpmlDocument? GetOpmlDocumentById(Guid targetId)
+    {
+        foreach (var rootNodes in RootNodes)
+        {
+            var node = rootNodes.GetNodeBydId(targetId);
+            if (node is not null)
+            {
+                return node.ToOpmlDocument();
+            }
+        }
+
+        return default;
+    }
+
     public override string ToString()
     {
         using var ms = new MemoryStream();
@@ -35,7 +61,10 @@ public record OpmlDocument(WorkflowyNode Node)
 
         writer.WriteStartElement("body");
 
-        Node.WriteTo(writer);
+        foreach (var rootNode in RootNodes)
+        {
+            rootNode.WriteTo(writer);
+        }
 
         writer.WriteEndElement();
 

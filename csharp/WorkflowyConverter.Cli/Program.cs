@@ -34,14 +34,14 @@ internal static class Program
         var targetId = id ?? Guid.Empty;
 
         using var inputStream = File.OpenRead(workflowyBackupFilename);
-        var rootNode = await WorkflowyNode.ReadFromAsync(inputStream);
+        var opmlDocument = await OpmlDocument.ReadFromAsync(inputStream);
 
         if (targetId != Guid.Empty)
         {
-            rootNode = rootNode.GetNodeBydId(targetId);
+            opmlDocument = opmlDocument.GetOpmlDocumentById(targetId);
         }
 
-        var opml = rootNode.ToOpmlDocument().ToString();
+        var opml = opmlDocument.ToString();
 
         Console.WriteLine(opml);
         ClipboardService.SetText(opml);

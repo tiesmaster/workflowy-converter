@@ -4,7 +4,7 @@
 
 <PageTitle>Workflowy Converter</PageTitle>
 
-@if (_rootNodes is null)
+@if (_opmlDocument is null)
 {
     <MudPaper @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass" Height="300px" Outlined="true" Class="@_dragClass">
         <InputFile OnChange="UploadFilesAsync" class="absolute mud-width-full mud-height-full overflow-hidden z-2" style="opacity:0;" />
@@ -21,7 +21,7 @@ else
     <MudGrid Spacing="10" Justify="Justify.Center">
         <MudItem xs="6">
             <MudPaper Class="pa-8">
-                <MudTreeView T="WorkflowyNode" @bind-SelectedValue="_selectedNode" Hover="true" Items="@_rootNodes">
+                <MudTreeView T="WorkflowyNode" @bind-SelectedValue="_selectedNode" Hover="true" Items="@(_opmlDocument!.RootNodes)">
                     <ItemTemplate>
                         <MudTreeViewItem
                             Value="@context"
@@ -46,7 +46,7 @@ else
     private const string DefaultDragClass = "relative rounded-lg border-2 border-dashed pa-4 mt-4 mud-width-full mud-height-full";
     private string _dragClass = DefaultDragClass;
 
-    private HashSet<WorkflowyNode>? _rootNodes;
+    private OpmlDocument? _opmlDocument;
     private WorkflowyNode? _selectedNode;
 
     private async Task UploadFilesAsync(InputFileChangeEventArgs e)
@@ -54,8 +54,7 @@ else
         try
         {
             var stream = e.File.OpenReadStream(maxAllowedSize: 2_000_000);
-            var rootNodes = await WorkflowyNode.ReadFromAsync(stream);
-            _rootNodes = rootNodes.ToHashSet();
+            _opmlDocument = await OpmlDocument.ReadFromAsync(stream);
         }
         catch (Exception ex)
         {
@@ -71,13 +70,13 @@ else
 
     private void Clear()
     {
-        _rootNodes = null;
+        _opmlDocument = null;
         _selectedNode = null;
 
         ClearDragClass();
     }
 
-    public string? Opml => _selectedNode?.ToOpmlDocument().ToString();
+    public string? Opml => _selectedNode?.ToOpmlDocument().ToString() ?? _opmlDocument!.ToString();
 
     private void SetDragClass()
     {
