@@ -2,7 +2,7 @@
 
 <PageTitle>Workflowy Converter</PageTitle>
 
-@if (_text is null)
+@if (_rootNode is null)
 {
     <InputFile id="fileInput" OnChange="UploadFilesAsync" hidden />
 
@@ -18,10 +18,17 @@ else
 {
     <MudGrid Spacing="10" Justify="Justify.Center">
         <MudItem xs="6">
-            <p>@_text</p>
+            <MudTreeView T="WorkflowyNode" @bind-SelectedValue="_selectedNode" Hover="true">
+                <MudTreeViewItem Value="@_rootNode" Text="@_rootNode.Todo" Expanded="true">
+                    @foreach (var node in _rootNode.Children)
+                    {
+                        <MudTreeViewItem Value="@node" Text="@node.Todo" />
+                    }
+                </MudTreeViewItem>
+            </MudTreeView>
         </MudItem>
         <MudItem xs="6">
-            <p>@_text</p>
+            <p>@_rootNode.Todo</p>
         </MudItem>
     </MudGrid>
 }
@@ -29,12 +36,12 @@ else
 @code
 {
     private string? _text;
+    private WorkflowyNode? _rootNode;
+    private WorkflowyNode? _selectedNode;
 
     private async Task UploadFilesAsync(InputFileChangeEventArgs e)
     {
         var stream = e.File.OpenReadStream();
-        var rootNode = await WorkflowyNode.ReadFromAsync(stream);
-
-        _text = rootNode.Todo;
+        _rootNode = await WorkflowyNode.ReadFromAsync(stream);
     }
 }
