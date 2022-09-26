@@ -18,19 +18,23 @@ else
 {
     <MudGrid Spacing="10" Justify="Justify.Center">
         <MudItem xs="6">
-            <MudTreeView T="WorkflowyNode" @bind-SelectedValue="_selectedNode" Hover="true" Items="@_rootNodes">
-                <ItemTemplate>
-                    <MudTreeViewItem
-                        Value="@context"
-                        Text="@context.Todo"
-                        Items="@(context.Children?.ToHashSet())"
-                        TextClass="@(context.Completed.HasValue ? "mud-error" : "")"
-                        Expanded="true" />
-                </ItemTemplate>
-            </MudTreeView>
+            <MudPaper Class="pa-8">
+                <MudTreeView T="WorkflowyNode" @bind-SelectedValue="_selectedNode" Hover="true" Items="@_rootNodes">
+                    <ItemTemplate>
+                        <MudTreeViewItem
+                            Value="@context"
+                            Text="@context.Todo"
+                            Items="@(context.Children?.ToHashSet())"
+                            TextClass="@(context.Completed.HasValue ? "mud-error" : "")"
+                            Expanded="true" />
+                    </ItemTemplate>
+                </MudTreeView>
+            </MudPaper>
         </MudItem>
         <MudItem xs="6">
-            <p>@Opml</p>
+            <MudPaper Class="pa-8">
+                <p>@Opml</p>
+            </MudPaper>
         </MudItem>
     </MudGrid>
 }
