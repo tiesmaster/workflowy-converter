@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkflowyConverter.Cli", "W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkflowyConverter.Wasm", "WorkflowyConverter.Wasm\WorkflowyConverter.Wasm.csproj", "{9235F38C-CE6C-4EC0-ACC4-CFD1181A04B8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkflowyConverter", "WorkflowyConverter\WorkflowyConverter.csproj", "{608EDD2F-A12C-4029-A68C-2F5E850E6968}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{9235F38C-CE6C-4EC0-ACC4-CFD1181A04B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9235F38C-CE6C-4EC0-ACC4-CFD1181A04B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9235F38C-CE6C-4EC0-ACC4-CFD1181A04B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{608EDD2F-A12C-4029-A68C-2F5E850E6968}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{608EDD2F-A12C-4029-A68C-2F5E850E6968}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{608EDD2F-A12C-4029-A68C-2F5E850E6968}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{608EDD2F-A12C-4029-A68C-2F5E850E6968}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
