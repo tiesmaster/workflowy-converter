@@ -26,7 +26,7 @@ else
             </MudTreeView>
         </MudItem>
         <MudItem xs="6">
-            <p>@(_rootNodes.First().Todo)</p>
+            <p>@Opml</p>
         </MudItem>
     </MudGrid>
 }
@@ -39,8 +39,10 @@ else
 
     private async Task UploadFilesAsync(InputFileChangeEventArgs e)
     {
-        var stream = e.File.OpenReadStream();
+        var stream = e.File.OpenReadStream(maxAllowedSize: 2_000_000);
         var rootNodes = await WorkflowyNode.ReadFromAsync(stream);
         _rootNodes = rootNodes.ToHashSet();
     }
+
+    public string? Opml => _selectedNode?.ToOpmlDocument().ToString();
 }
