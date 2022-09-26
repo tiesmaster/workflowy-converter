@@ -2,7 +2,7 @@ using System.CommandLine;
 
 using TextCopy;
 
-namespace Tiesmaster.Workflowy.Converter;
+namespace Tiesmaster.Workflowy.Converter.Cli;
 
 internal static class Program
 {
