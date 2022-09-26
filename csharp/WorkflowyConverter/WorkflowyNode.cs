@@ -18,10 +18,10 @@ public class WorkflowyNode
     [JsonPropertyName("cp")]
     public int? Completed { get; init; }
 
-    public static async Task<WorkflowyNode> ReadFromAsync(Stream stream)
+    public static async Task<WorkflowyNode[]> ReadFromAsync(Stream stream)
         // TODO: Handle failure
         // TODO: Fix the bang operator
-        => (await JsonSerializer.DeserializeAsync<WorkflowyNode>(stream))!;
+        => (await JsonSerializer.DeserializeAsync<WorkflowyNode[]>(stream))!;
 
     public WorkflowyNode GetNodeBydId(Guid targetId)
         => GetNodeBydIdCore(targetId)!;

@@ -2,7 +2,7 @@
 
 <PageTitle>Workflowy Converter</PageTitle>
 
-@if (_rootNode is null)
+@if (_rootNodes is null)
 {
     <InputFile id="fileInput" OnChange="UploadFilesAsync" hidden />
 
@@ -18,17 +18,15 @@ else
 {
     <MudGrid Spacing="10" Justify="Justify.Center">
         <MudItem xs="6">
-            <MudTreeView T="WorkflowyNode" @bind-SelectedValue="_selectedNode" Hover="true">
-                <MudTreeViewItem Value="@_rootNode" Text="@_rootNode.Todo" Expanded="true">
-                    @foreach (var node in _rootNode.Children)
-                    {
-                        <MudTreeViewItem Value="@node" Text="@node.Todo" />
-                    }
-                </MudTreeViewItem>
+            <MudTreeView T="WorkflowyNode" @bind-SelectedValue="_selectedNode" Hover="true" Items="@_rootNodes">
+                <ItemTemplate>
+                    <MudTreeViewItem Value="@context" Text="@context.Todo" Items="@(context.Children?.ToHashSet())" Expanded="true">
+                    </MudTreeViewItem>
+                </ItemTemplate>
             </MudTreeView>
         </MudItem>
         <MudItem xs="6">
-            <p>@_rootNode.Todo</p>
+            <p>@(_rootNodes.First().Todo)</p>
         </MudItem>
     </MudGrid>
 }
@@ -36,12 +34,13 @@ else
 @code
 {
     private string? _text;
-    private WorkflowyNode? _rootNode;
+    private HashSet<WorkflowyNode>? _rootNodes;
     private WorkflowyNode? _selectedNode;
 
     private async Task UploadFilesAsync(InputFileChangeEventArgs e)
     {
         var stream = e.File.OpenReadStream();
-        _rootNode = await WorkflowyNode.ReadFromAsync(stream);
+        var rootNodes = await WorkflowyNode.ReadFromAsync(stream);
+        _rootNodes = rootNodes.ToHashSet();
     }
 }
