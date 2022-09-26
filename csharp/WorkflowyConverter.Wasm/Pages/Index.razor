@@ -33,8 +33,8 @@ else
     private async Task UploadFilesAsync(InputFileChangeEventArgs e)
     {
         var stream = e.File.OpenReadStream();
+        var rootNode = await WorkflowyNode.ReadFromAsync(stream);
 
-        var reader = new StreamReader(stream);
-        _text = await reader.ReadToEndAsync();
+        _text = rootNode.Todo;
     }
 }

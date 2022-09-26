@@ -21,20 +21,20 @@ internal static class Program
         rootCommand.AddOption(idOption);
 
         rootCommand.SetHandler(
-            (inputFile, id) => ConvertJsonToOpml(inputFile!, id),
+            (inputFile, id) => ConvertJsonToOpmlAsync(inputFile!, id),
             inputArgument,
             idOption);
 
         return await rootCommand.InvokeAsync(args);
     }
 
-    private static void ConvertJsonToOpml(FileInfo file, Guid? id)
+    private static async Task ConvertJsonToOpmlAsync(FileInfo file, Guid? id)
     {
         var workflowyBackupFilename = file.FullName;
         var targetId = id ?? Guid.Empty;
 
         using var inputStream = File.OpenRead(workflowyBackupFilename);
-        var rootNode = WorkflowyNode.ReadFrom(inputStream);
+        var rootNode = await WorkflowyNode.ReadFromAsync(inputStream);
 
         if (targetId != Guid.Empty)
         {
