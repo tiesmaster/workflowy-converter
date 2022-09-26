@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "WorkflowyConverter.Wasm": {
+    "WASM": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,
