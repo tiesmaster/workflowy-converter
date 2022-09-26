@@ -20,8 +20,12 @@ else
         <MudItem xs="6">
             <MudTreeView T="WorkflowyNode" @bind-SelectedValue="_selectedNode" Hover="true" Items="@_rootNodes">
                 <ItemTemplate>
-                    <MudTreeViewItem Value="@context" Text="@context.Todo" Items="@(context.Children?.ToHashSet())" Expanded="true">
-                    </MudTreeViewItem>
+                    <MudTreeViewItem
+                        Value="@context"
+                        Text="@context.Todo"
+                        Items="@(context.Children?.ToHashSet())"
+                        TextClass="@(context.Completed.HasValue ? "mud-error" : "")"
+                        Expanded="true" />
                 </ItemTemplate>
             </MudTreeView>
         </MudItem>
