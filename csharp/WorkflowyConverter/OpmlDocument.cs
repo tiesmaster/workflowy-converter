@@ -14,6 +14,12 @@ public record OpmlDocument(HashSet<WorkflowyNode> RootNodes)
     public static async Task<OpmlDocument> ReadFromAsync(Stream stream)
     {
         var rootNodes = await JsonSerializer.DeserializeAsync<WorkflowyNode[]>(stream);
+
+        foreach (var rootNode in rootNodes)
+        {
+            rootNode.SetLevel(0);
+        }
+
         return new(rootNodes!);
     }
 

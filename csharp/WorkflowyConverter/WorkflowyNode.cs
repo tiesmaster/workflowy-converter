@@ -17,6 +17,8 @@ public class WorkflowyNode
     [JsonPropertyName("cp")]
     public int? Completed { get; init; }
 
+    public int Level { get; private set; }
+
     public WorkflowyNode? GetNodeBydId(Guid targetId)
         => GetNodeBydIdCore(targetId);
 
@@ -42,6 +44,18 @@ public class WorkflowyNode
         }
 
         writer.WriteEndElement();
+    }
+
+    public void SetLevel(int level)
+    {
+        Level = level;
+        if (Children is not null)
+        {
+            foreach (var child in Children)
+            {
+                child.SetLevel(level + 1);
+            }
+        }
     }
 
     private WorkflowyNode? GetNodeBydIdCore(Guid targetId)
