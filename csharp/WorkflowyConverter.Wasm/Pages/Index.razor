@@ -24,7 +24,7 @@ else
 
     <MudGrid Spacing="10" Justify="Justify.Center">
         <MudItem xs="6">
-            <MudPaper Class="pa-8">
+            <MudPaper Class="pa-8" Style="overflow-y: scroll; height: 80vh">
                 <MudTreeView T="WorkflowyNode" @bind-SelectedValue="_selectedNode" Hover="true" Items="@(_opmlDocument!.RootNodes)">
                     <ItemTemplate>
                         <MudTreeViewItem
@@ -38,7 +38,7 @@ else
             </MudPaper>
         </MudItem>
         <MudItem xs="6">
-            <MudPaper Class="pa-8">
+            <MudPaper Class="pa-8" Style="overflow-y: scroll; height: 80vh">
                 <pre>@Opml</pre>
             </MudPaper>
         </MudItem>
