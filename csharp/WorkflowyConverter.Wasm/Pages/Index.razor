@@ -25,6 +25,8 @@ else
                     <ItemTemplate>
                         <MudTreeViewItem
                             Value="@context"
+                            Items="@(context.Level < 2 ? context.Children?.ToHashSet() : default)"
+                            Expanded="@(context.Level < 2)"
                             Text="@context.Todo"
                             EndText="@context.Level.ToString()"
                             TextClass="@(context.Completed.HasValue ? "mud-error" : "")" />
