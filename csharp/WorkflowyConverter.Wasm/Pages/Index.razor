@@ -58,7 +58,7 @@ else
         }
         catch (Exception ex)
         {
-            Snackbar.Add($"{e.File.Name} is not a valid Workflowy JSON backup file", Severity.Warning);
+            Snackbar.Add($" Oeps!! {e.File.Name} is not a valid Workflowy JSON backup file", Severity.Warning);
             Console.WriteLine(ex.ToString());
         }
     }
