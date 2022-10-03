@@ -21,14 +21,12 @@ else
     <MudGrid Spacing="10" Justify="Justify.Center">
         <MudItem xs="6">
             <MudPaper Class="pa-8" Style="overflow-y: scroll; height: 80vh">
-                <MudTreeView T="WorkflowyNode" @bind-SelectedValue="_selectedNode" Hover="true" Items="@(_opmlDocument?.RootNodes)">
+                <MudTreeView T="WorkflowyNode" @bind-SelectedValue="_selectedNode" Hover="true" ServerData="LoadChildren" Items="@(_opmlDocument?.RootNodes)">
                     <ItemTemplate>
                         <MudTreeViewItem
                             Value="@context"
                             Text="@context.Todo"
-                            Items="@(context.Children?.ToHashSet())"
-                            TextClass="@(context.Completed.HasValue ? "mud-error" : "")"
-                            Expanded="true" />
+                            TextClass="@(context.Completed.HasValue ? "mud-error" : "")" />
                     </ItemTemplate>
                 </MudTreeView>
                 <MudOverlay Visible="@(_loadState == LoadState.Loading)" DarkBackground="true" Absolute="true">
@@ -69,6 +67,11 @@ else
         }
 
         _loadState = LoadState.Ready;
+    }
+
+    public async Task<HashSet<WorkflowyNode>> LoadChildren(WorkflowyNode parentNode)
+    {
+        return parentNode.Children?.ToHashSet();
     }
 
     private async Task CopyOpmlToClipboard()
