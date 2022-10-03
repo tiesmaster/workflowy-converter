@@ -4,12 +4,16 @@
 
 <PageTitle>Workflowy Converter</PageTitle>
 
-@if (_opmlDocument is null)
+@if (_loadState == LoadState.SelectFile)
 {
     <MudPaper @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass" Height="300px" Outlined="true" Class="@_dragClass">
-        <InputFile OnChange="UploadFilesAsync" class="absolute mud-width-full mud-height-full overflow-hidden z-2" style="opacity:0;" />
+        <InputFile OnChange="LoadWorkflowyBackupFileAsync" class="absolute mud-width-full mud-height-full overflow-hidden z-2" style="opacity:0;" />
         <MudText Typo="Typo.h6">Drag and drop a Workflowy JSON backup file or click here</MudText>
     </MudPaper>
+}
+else if (_loadState == LoadState.Loading)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
 }
 else
 {
@@ -48,9 +52,12 @@ else
 
     private OpmlDocument? _opmlDocument;
     private WorkflowyNode? _selectedNode;
+    private LoadState _loadState;
 
-    private async Task UploadFilesAsync(InputFileChangeEventArgs e)
+    private async Task LoadWorkflowyBackupFileAsync(InputFileChangeEventArgs e)
     {
+        _loadState = LoadState.Loading;
+
         try
         {
             var stream = e.File.OpenReadStream(maxAllowedSize: 2_000_000);
@@ -61,6 +68,8 @@ else
             Snackbar.Add($" Oeps!! {e.File.Name} is not a valid Workflowy JSON backup file", Severity.Warning);
             Console.WriteLine(ex.ToString());
         }
+
+        _loadState = LoadState.Ready;
     }
 
     private async Task CopyOpmlToClipboard()
@@ -70,8 +79,12 @@ else
 
     private void Clear()
     {
+        _loadState = LoadState.Loading;
+
         _opmlDocument = null;
         _selectedNode = null;
+
+        _loadState = LoadState.SelectFile;
 
         ClearDragClass();
     }
