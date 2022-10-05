@@ -14,14 +14,14 @@
 else
 {
     <MudToolBar DisableGutters="true" Class="gap-4">
-        <MudButton OnClick="CopyOpmlToClipboard" StartIcon="@Icons.Material.Outlined.FileCopy" Variant="Variant.Filled" Disabled="@(Opml is null)">Copy OPML to clipboard</MudButton>
-        <MudButton OnClick="Clear" StartIcon="@Icons.Filled.Delete" Variant="Variant.Filled" Color="Color.Error">Clear</MudButton>
+        <MudButton OnClick="CopyOpmlToClipboardAsync" StartIcon="@Icons.Material.Outlined.FileCopy" Variant="Variant.Filled" Disabled="@(Opml is null)">Copy OPML to clipboard</MudButton>
+        <MudButton OnClick="Reset" StartIcon="@Icons.Filled.Delete" Variant="Variant.Filled" Color="Color.Error">Clear</MudButton>
     </MudToolBar>
 
     <MudGrid Spacing="10" Justify="Justify.Center">
         <MudItem xs="6">
             <MudPaper Class="pa-8" Style="overflow-y: scroll; height: 80vh">
-                <MudTreeView T="WorkflowyNode" @bind-SelectedValue="_selectedNode" Hover="true" ServerData="LoadChildren" Items="@(_opmlDocument?.RootNodes)">
+                <MudTreeView T="WorkflowyNode" @bind-SelectedValue="_selectedNode" Hover="true" ServerData="LoadChildrenAsync" Items="@(_opmlDocument?.RootNodes)">
                     <ItemTemplate>
                         <MudTreeViewItem
                             Value="@context"
@@ -72,17 +72,15 @@ else
         _loadState = LoadState.Ready;
     }
 
-    public async Task<HashSet<WorkflowyNode>> LoadChildren(WorkflowyNode parentNode)
-    {
-        return parentNode.Children?.ToHashSet();
-    }
+    public Task<HashSet<WorkflowyNode>?> LoadChildrenAsync(WorkflowyNode parentNode)
+        => Task.FromResult(parentNode.Children?.ToHashSet());
 
-    private async Task CopyOpmlToClipboard()
+    private async Task CopyOpmlToClipboardAsync()
     {
         await JsApiService.CopyToClipboardAsync(Opml!);
     }
 
-    private void Clear()
+    private void Reset()
     {
         _loadState = LoadState.Loading;
 
