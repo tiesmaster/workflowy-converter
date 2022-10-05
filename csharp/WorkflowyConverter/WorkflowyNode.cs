@@ -21,7 +21,12 @@ public class WorkflowyNode
     public int DescendentsAndSelfCount => Children?.Sum(c => c.DescendentsAndSelfCount) + 1 ?? 1;
 
     public WorkflowyNode? GetNodeBydId(Guid targetId)
-        => GetNodeBydIdCore(targetId);
+    {
+        var visitor = new NodeSearchingVisitor(targetId);
+        visitor.Visit(this);
+
+        return visitor.Node;
+    }
 
     public OpmlDocument ToOpmlDocument()
         => new(this);
@@ -35,27 +40,5 @@ public class WorkflowyNode
                 visitor.Visit(child);
             }
         }
-    }
-
-    private WorkflowyNode? GetNodeBydIdCore(Guid targetId)
-    {
-        if (Id == targetId)
-        {
-            return this;
-        }
-
-        if (Children is not null)
-        {
-            foreach (var child in Children)
-            {
-                var targetNode = child.GetNodeBydId(targetId);
-                if (targetNode is not null)
-                {
-                    return targetNode;
-                }
-            }
-        }
-
-        return default;
     }
 }
