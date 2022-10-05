@@ -10,6 +10,7 @@
         <InputFile OnChange="LoadWorkflowyBackupFileAsync" class="absolute mud-width-full mud-height-full overflow-hidden z-2" style="opacity:0;" />
         <MudText Typo="Typo.h6">Drag and drop a Workflowy JSON backup file or click here</MudText>
     </MudPaper>
+    <MudCheckBox @bind-Checked="@_enableLazyLoad" Color="Color.Primary">Enable lazy load</MudCheckBox>
 }
 else
 {
@@ -53,6 +54,7 @@ else
     private OpmlDocument? _opmlDocument;
     private WorkflowyNode? _selectedNode;
     private LoadState _loadState;
+    private bool _enableLazyLoad;
 
     private async Task LoadWorkflowyBackupFileAsync(InputFileChangeEventArgs e)
     {
@@ -86,6 +88,7 @@ else
 
         _opmlDocument = null;
         _selectedNode = null;
+        _enableLazyLoad = false;
 
         _loadState = LoadState.SelectFile;
 
