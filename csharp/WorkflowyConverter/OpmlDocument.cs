@@ -15,12 +15,13 @@ public record OpmlDocument(HashSet<WorkflowyNode> RootNodes)
     {
         var rootNodes = await JsonSerializer.DeserializeAsync<WorkflowyNode[]>(stream);
 
-        foreach (var rootNode in rootNodes)
+        var visitor = new LevelUpdatingVisitor();
+        foreach (var rootNode in rootNodes!)
         {
-            rootNode.SetLevel(0);
+            visitor.Visit(rootNode);
         }
 
-        return new(rootNodes!);
+        return new(rootNodes);
     }
 
     public OpmlDocument? GetOpmlDocumentById(Guid targetId)
@@ -67,9 +68,10 @@ public record OpmlDocument(HashSet<WorkflowyNode> RootNodes)
 
         writer.WriteStartElement("body");
 
+        var visitor = new ToOpmlVisitor(writer);
         foreach (var rootNode in RootNodes)
         {
-            rootNode.WriteTo(writer);
+            visitor.Visit(rootNode);
         }
 
         writer.WriteEndElement();

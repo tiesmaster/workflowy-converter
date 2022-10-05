@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using System.Xml;
 
 namespace Tiesmaster.Workflowy.Converter;
 
@@ -17,7 +16,7 @@ public class WorkflowyNode
     [JsonPropertyName("cp")]
     public int? Completed { get; init; }
 
-    public int Level { get; private set; }
+    public int Level { get; set; }
 
     public int DescendentsAndSelfCount => Children?.Sum(c => c.DescendentsAndSelfCount) + 1 ?? 1;
 
@@ -27,35 +26,13 @@ public class WorkflowyNode
     public OpmlDocument ToOpmlDocument()
         => new(this);
 
-    public void WriteTo(XmlWriter writer)
+    public void Accept(Visitor visitor)
     {
-        writer.WriteStartElement("outline");
-        if (Completed.HasValue)
-        {
-            writer.WriteAttributeString("_complete", "true");
-        }
-
-        writer.WriteAttributeString("text", Todo);
-
         if (Children is not null)
         {
             foreach (var child in Children)
             {
-                child.WriteTo(writer);
-            }
-        }
-
-        writer.WriteEndElement();
-    }
-
-    public void SetLevel(int level)
-    {
-        Level = level;
-        if (Children is not null)
-        {
-            foreach (var child in Children)
-            {
-                child.SetLevel(level + 1);
+                visitor.Visit(child);
             }
         }
     }
