@@ -32,8 +32,9 @@ else
                             Items="@(ShouldLazyLoad(context) ? default : context.Children?.ToHashSet())"
                             Expanded="@(!ShouldLazyLoad(context))"
                             Text="@context.Todo"
+                            TextClass="@(context.Completed.HasValue ? "mud-error" : "")"
                             EndText="@context.Level.ToString()"
-                            TextClass="@(context.Completed.HasValue ? "mud-error" : "")" />
+                            EndTextTypo="Typo.caption" />
                     </ItemTemplate>
 
                 </MudTreeView>
