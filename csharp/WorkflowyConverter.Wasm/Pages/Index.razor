@@ -22,7 +22,10 @@ else
     <MudGrid Spacing="10" Justify="Justify.Center">
         <MudItem xs="6">
             <MudPaper Class="pa-8" Style="overflow-y: scroll; height: 80vh">
-                <MudTreeView T="WorkflowyNode" @bind-SelectedValue="_selectedNode" Hover="true" ServerData="LoadChildrenAsync" Items="@(_opmlDocument?.RootNodes)">
+                <MudTreeView T="WorkflowyNode" @bind-SelectedValue="_selectedNode" Hover="true"
+                    ServerData="@(_enableLazyLoad ? LoadChildrenAsync : (Func<WorkflowyNode, Task<HashSet<WorkflowyNode>>>)null)"
+                    Items="@(_opmlDocument?.RootNodes)">
+
                     <ItemTemplate>
                         <MudTreeViewItem
                             Value="@context"
@@ -32,6 +35,7 @@ else
                             EndText="@context.Level.ToString()"
                             TextClass="@(context.Completed.HasValue ? "mud-error" : "")" />
                     </ItemTemplate>
+
                 </MudTreeView>
                 <MudOverlay Visible="@(_loadState == LoadState.Loading)" DarkBackground="true" Absolute="true">
                     <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
@@ -85,7 +89,7 @@ else
     private const int MaxLevelForLazyLoad = 1;
 
     private bool ShouldLazyLoad(WorkflowyNode node)
-        => node.Level > MaxLevelForLazyLoad;
+        => _enableLazyLoad && node.Level > MaxLevelForLazyLoad;
 
     private void Reset()
     {
