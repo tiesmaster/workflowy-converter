@@ -26,8 +26,8 @@ else
                     <ItemTemplate>
                         <MudTreeViewItem
                             Value="@context"
-                            Items="@(context.Level < 2 ? context.Children?.ToHashSet() : default)"
-                            Expanded="@(context.Level < 2)"
+                            Items="@(ShouldLazyLoad(context) ? default : context.Children?.ToHashSet())"
+                            Expanded="@(!ShouldLazyLoad(context))"
                             Text="@context.Todo"
                             EndText="@context.Level.ToString()"
                             TextClass="@(context.Completed.HasValue ? "mud-error" : "")" />
@@ -81,6 +81,11 @@ else
     {
         await JsApiService.CopyToClipboardAsync(Opml!);
     }
+
+    private const int MaxLevelForLazyLoad = 1;
+
+    private bool ShouldLazyLoad(WorkflowyNode node)
+        => node.Level > MaxLevelForLazyLoad;
 
     private void Reset()
     {
