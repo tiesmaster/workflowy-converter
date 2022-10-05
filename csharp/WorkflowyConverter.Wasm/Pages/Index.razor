@@ -33,7 +33,7 @@ else
                             Expanded="@(!ShouldLazyLoad(context))"
                             Text="@context.Todo"
                             TextClass="@(context.Completed.HasValue ? "mud-error" : "")"
-                            EndText="@context.Level.ToString()"
+                            EndText="@context.DescendentsAndSelfCount.ToString()"
                             EndTextTypo="Typo.caption" />
                     </ItemTemplate>
 

@@ -19,6 +19,8 @@ public class WorkflowyNode
 
     public int Level { get; private set; }
 
+    public int DescendentsAndSelfCount => Children?.Sum(c => c.DescendentsAndSelfCount) + 1 ?? 1;
+
     public WorkflowyNode? GetNodeBydId(Guid targetId)
         => GetNodeBydIdCore(targetId);
 
