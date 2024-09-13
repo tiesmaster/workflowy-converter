@@ -59,7 +59,7 @@ else
     private OpmlDocument? _opmlDocument;
     private WorkflowyNode? _selectedNode;
     private LoadState _loadState;
-    private bool _enableLazyLoad;
+    private bool _enableLazyLoad = true;
 
     private async Task LoadWorkflowyBackupFileAsync(InputFileChangeEventArgs e)
     {
